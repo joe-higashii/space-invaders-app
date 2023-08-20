@@ -99,11 +99,6 @@ class InvaderProjectile {
 
     this.width = 3
     this.height = 10
-
-    this.velocity = {
-      x: Math.max(-5, Math.random() * 5),
-      y: Math.max(5, Math.random() * 5)
-    }
   }
 
   draw() {
@@ -164,12 +159,12 @@ class Invader {
     InvaderProjectiles.push(
       new InvaderProjectile({
         position: {
-          x: this.position.x + this.width / 2,
+          x: this.position.x + this.width,
           y: this.position.y + this.height
         },
         velocity: {
           x: 0,
-          y: 5
+          y: Math.max(5, Math.random() * 10)
         }
       })
     )
@@ -262,7 +257,7 @@ function animate() {
   grids.forEach((grid, grindIndex) => {
     grid.update()
     //gerar projéteis
-    if (frames % 90 === 0 && grid.invaders.length > 0) {
+    if (frames % 100 === 0 && grid.invaders.length > 0) {
       grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(invaderProjectiles)
     }
     grid.invaders.forEach((invader, i) => {
