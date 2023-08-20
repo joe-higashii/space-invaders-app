@@ -107,15 +107,20 @@ function animate() {
   c.fillStyle = 'black'
   c.fillRect(0, 0, canvas.width, canvas.height)
   player.update()
-  projectiles.forEach(projectile => {
-    projectile.update()
+  projectiles.forEach((projectile, index) => {
+
+    if (projectile.position.y + projectile.position.radius <= 0) {
+      projectiles.splice(index, 1)
+    } else {
+      projectile.update()
+    }
   })
 
   if (keys.a.pressed && player.position.x >= 0) {
-    player.velocity.x = -6
+    player.velocity.x = -7
     player.rotation = -0.15
   } else if (keys.d.pressed && player.position.x + player.width <= canvas.width) {
-    player.velocity.x = 6
+    player.velocity.x = 7
     player.rotation = 0.15
   } else {
     player.velocity.x = 0
@@ -128,10 +133,12 @@ animate()
 addEventListener('keydown', ({ key }) => {
   switch (key) {
     case 'a':
+    case 'ArrowLeft':
       console.log('left')
       keys.a.pressed = true
       break
     case 'd':
+    case 'ArrowRight':
       console.log('right')
       keys.d.pressed = true
       break
@@ -139,12 +146,12 @@ addEventListener('keydown', ({ key }) => {
       console.log('space')
       projectiles.push(new Projectile({
         position: {
-          x: 300,
-          y: 300
+          x: player.position.x + player.width / 2,
+          y: player.position.y
         },
         velocity: {
           x: 0,
-          y: -5
+          y: -10
         }
       }))
       break
@@ -154,10 +161,12 @@ addEventListener('keydown', ({ key }) => {
 addEventListener('keyup', ({ key }) => {
   switch (key) {
     case 'a':
+    case 'ArrowLeft':
       console.log('left')
       keys.a.pressed = false
       break
     case 'd':
+    case 'ArrowRight':
       console.log('right')
       keys.d.pressed = false
       break
