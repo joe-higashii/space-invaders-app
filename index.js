@@ -1,23 +1,21 @@
-const backgroundMusic = document.createElement('audio');
-backgroundMusic.id = 'backgroundMusic';
-backgroundMusic.loop = true;
-backgroundMusic.src = './components/audio/backgroundMusic.wav';
+// const backgroundMusic = document.createElement('audio');
+// backgroundMusic.id = 'backgroundMusic';
+// backgroundMusic.loop = true;
+// backgroundMusic.src = './components/audio/backgroundMusic.wav';
 
-backgroundMusic.autoplay();
+// document.body.appendChild(backgroundMusic);
 
-document.body.appendChild(backgroundMusic);
+// backgroundMusic.volume = 0.5;
 
-backgroundMusic.volume = 0.5;
+// document.addEventListener('visibilitychange', () => {
+//   if (document.hidden) {
 
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
+//     backgroundMusic.pause();
+//   } else {
 
-    backgroundMusic.pause();
-  } else {
-
-    backgroundMusic.play();
-  }
-});
+//     backgroundMusic.play();
+//   }
+// });
 
 const scoreEl = document.querySelector('#scoreEl')
 const canvas = document.querySelector('canvas')
@@ -344,7 +342,7 @@ function createParticles({ object, color, fades }) {
 }
 
 function animate() {
-  if (!game.active ) return
+  if (!game.active) return
   requestAnimationFrame(animate)
   c.fillStyle = 'black'
   c.fillRect(0, 0, canvas.width, canvas.height)
@@ -394,7 +392,7 @@ function animate() {
       setTimeout(() => {
         game.active = false
         const gameOverSound = new Audio('./components/audio/gameOver.mp3')
-      gameOverSound.play();
+        gameOverSound.play();
       }, 2000)
 
       createParticles({
@@ -498,13 +496,16 @@ function animate() {
 
 animate()
 
+const backgroundMusic = new Audio('./components/audio/backgroundMusic.wav')
+    backgroundMusic.play();
+
 const shootSound = new Audio('./components/audio/shoot.wav')
 
 document.addEventListener('keydown', (event) => {
   if (!game.active) return
   if (event.key === ' ' || event.key === 'Spacebar') {
-    backgroundMusic.play();
     shootSound.play();
+    backgroundMusic.play();
     shootSound.playbackRate = 2.0
   }
 });
