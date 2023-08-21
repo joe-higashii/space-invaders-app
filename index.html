@@ -6,13 +6,16 @@
   <link rel="icon" href="./components/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="./index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <title>Space invaders app</title>
 </head>
 
 <body>
+  <p id="score"><span>Score:</span> <span>0</span></p>
   <canvas id="canvas">
     <script src='./index.js'></script>
   </canvas>
+  <div id="gameOverText" class="hidden">GAME OVER</div>
 </body>
 
 </html>
