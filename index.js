@@ -1,3 +1,23 @@
+const backgroundMusic = document.createElement('audio');
+backgroundMusic.id = 'backgroundMusic';
+backgroundMusic.loop = true
+
+backgroundMusic.src = './components/audio/backgroundMusic.wav';
+
+document.body.appendChild(backgroundMusic);
+
+backgroundMusic.play();
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+
+    backgroundMusic.pause();
+  } else {
+
+    backgroundMusic.play();
+  }
+});
+
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
@@ -92,6 +112,30 @@ class Projectile {
   }
 }
 
+class Particle {
+  constructor({ position, velocity, radius, color }) {
+    this.position = position
+    this.velocity = velocity
+
+    this.radius = radius
+    this.color = color
+  }
+
+  draw() {
+    c.beginPath()
+    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+    c.fillStyle = this.color
+    c.fill()
+    c.closePath()
+  }
+
+  update() {
+    this.draw()
+    this.position.x += this.velocity.x
+    this.position.y += this.velocity.y
+  }
+}
+
 class InvaderProjectile {
   constructor({ position, velocity }) {
     this.position = position
@@ -168,6 +212,9 @@ class Invader {
         }
       })
     )
+
+    const enemyShootSound = new Audio('./components/audio/enemyShoot.wav')
+    enemyShootSound.play();
   }
 }
 
@@ -219,6 +266,7 @@ const player = new Player()
 const projectiles = []
 const grids = []
 const invaderProjectiles = []
+const particles = []
 
 const keys = {
   a: {
@@ -240,9 +288,26 @@ function animate() {
   c.fillStyle = 'black'
   c.fillRect(0, 0, canvas.width, canvas.height)
   player.update()
-  invaderProjectiles.forEach(invaderProjectile => {
-    invaderProjectile.update()
+  particles.forEach(particle => {
+    particle.update()
   })
+
+  invaderProjectiles.forEach((invaderProjectile, index) => {
+    if (invaderProjectile.position.y + invaderProjectile.height >=
+      canvas.height) {
+      setTimeout(() => {
+        invaderProjectiles.splice(index, 1)
+      }, 0)
+    } else invaderProjectile.update()
+
+    if (invaderProjectile.position.y + invaderProjectile.height >=
+      player.position.y && invaderProjectile.position.x + invaderProjectile.width >=
+      player.position.x && invaderProjectile.position.x <=
+      player.position.x + player.width) {
+      console.log('GAME OVER')
+    }
+  })
+
   projectiles.forEach((projectile, index) => {
 
     if (projectile.position.y + projectile.position.radius <= 0) {
@@ -262,7 +327,7 @@ function animate() {
     }
     grid.invaders.forEach((invader, i) => {
       invader.update({ velocity: grid.velocity })
-
+      //projéteis atinjem o inimigo
       projectiles.forEach((projectile, j) => {
         if (
           projectile.position.y - projectile.radius <=
@@ -273,6 +338,19 @@ function animate() {
           invader.position.x + invader.width && projectile.position.y +
           projectile.radius >= invader.position.y
         ) {
+          particles.push(new Particle({
+            position: {
+              x: invader.position.x + invader.width / 2,
+              y: invader.position.y + invader.height / 2
+            },
+            velocity: {
+              x: 2,
+              y: 2
+            },
+            radius: 10,
+            color: 'yellow'
+          }))
+
           setTimeout(() => {
             const invaderFound = grid.invaders.find
               (invader2 => invader2 === invader)
@@ -280,7 +358,7 @@ function animate() {
             const projectileFound = projectiles.find(
               projectile2 => projectile2 === projectile)
 
-            // remover invaders e projétils
+            // remover invaders e projéteis
             if (invaderFound && projectileFound) {
               grid.invaders.splice(i, 1)
               projectiles.splice(j, 1)
@@ -298,6 +376,8 @@ function animate() {
                 grids.splice(grindIndex, 1)
               }
             }
+            const explodeSound = new Audio('./components/audio/explode.wav')
+            explodeSound.play();
           }, 0)
         }
       })
@@ -325,6 +405,15 @@ function animate() {
 }
 
 animate()
+
+const shootSound = new Audio('./components/audio/shoot.wav')
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === ' ' || event.key === 'Spacebar') {
+    shootSound.play();
+    shootSound.playbackRate = 2.0
+  }
+});
 
 addEventListener('keydown', ({ key }) => {
   switch (key) {
