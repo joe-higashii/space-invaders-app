@@ -289,6 +289,24 @@ const keys = {
 let frames = 0
 let randomInterval = Math.floor(Math.random() * 500 + 500)
 
+function createParticles({ object, color }) {
+  for (let i = 0; i < 15; i++) {
+    particles.push(new Particle({
+      position: {
+        x: object.position.x + object.width / 2,
+        y: object.position.y + object.height / 2
+      },
+      velocity: {
+        x: (Math.random() - 0.5) * 2,
+        y: (Math.random() - 0.5) * 2
+      },
+      radius: Math.random() * 3,
+      color: color || '#BAA0DE'
+    })
+    )
+  }
+}
+
 function animate() {
   requestAnimationFrame(animate)
   c.fillStyle = 'black'
@@ -312,11 +330,19 @@ function animate() {
       }, 0)
     } else invaderProjectile.update()
 
+    //projétil atinge jogador
     if (invaderProjectile.position.y + invaderProjectile.height >=
       player.position.y && invaderProjectile.position.x + invaderProjectile.width >=
       player.position.x && invaderProjectile.position.x <=
       player.position.x + player.width) {
+      setTimeout(() => {
+        invaderProjectiles.splice(index, 1)
+      }, 0)
       console.log('GAME OVER')
+      createParticles({
+        object: player,
+        color: 'white'
+      })
     }
   })
 
@@ -359,21 +385,10 @@ function animate() {
 
             // remover invaders e projéteis
             if (invaderFound && projectileFound) {
-              for (let i = 0; i < 15; i++) {
-                particles.push(new Particle({
-                  position: {
-                    x: invader.position.x + invader.width / 2,
-                    y: invader.position.y + invader.height / 2
-                  },
-                  velocity: {
-                    x: (Math.random() - 0.5) * 2,
-                    y: (Math.random() - 0.5) * 2
-                  },
-                  radius: Math.random() * 3,
-                  color: '#BAA0DE'
-                })
-                )
-              }
+              createParticles({
+                object: invader
+              })
+
               grid.invaders.splice(i, 1)
               projectiles.splice(j, 1)
 
