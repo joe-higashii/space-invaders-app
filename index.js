@@ -381,8 +381,8 @@ function animate() {
         gameOverText.style.display = "block";
       }, 2000)
       console.log('GAME OVER')
-      const explodeSound = new Audio('./components/audio/explode.wav')
-      explodeSound.play();
+      const smashedSound = new Audio('./components/audio/smashed.mp3')
+      smashedSound.play();
       setTimeout(() => {
         invaderProjectiles.splice(index, 1)
         player.opacity = 0
