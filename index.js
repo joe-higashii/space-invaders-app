@@ -6,24 +6,19 @@ backgroundMusic.src = './components/audio/backgroundMusic.wav';
 
 document.body.appendChild(backgroundMusic);
 
+backgroundMusic.volume = 0.5;
+
 backgroundMusic.play();
 
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-
-    backgroundMusic.pause();
-  } else {
-
-    backgroundMusic.play();
-  }
-});
-
+const scoreEl = document.querySelector('#scoreEl')
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
+console.log(scoreEl)
+
 function resizeCanvas() {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
+  canvas.width = 1024;
+  canvas.height = 576;
 }
 
 resizeCanvas();
@@ -151,13 +146,16 @@ class InvaderProjectile {
     this.position = position
     this.velocity = velocity
 
-    this.width = 3
-    this.height = 10
+    this.width = 9;
+    this.height = 6;
+    this.levels = 3;
   }
 
   draw() {
-    c.fillStyle = 'white'
-    c.fillRect(this.position.x, this.position.y, this.width, this.height)
+    c.fillStyle = 'yellow';
+    c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    c.fillRect(this.position.x + 2, this.position.y + this.height, this.width - 4, this.height);
+    c.fillRect(this.position.x + 4, this.position.y + 2 * this.height, this.width - 8, this.height);
   }
 
   update() {
@@ -296,6 +294,9 @@ let game = {
   over: false,
   active: true
 }
+let score = 0
+
+const colors = ['red', 'yellow', 'orange', 'salmon', 'tomato', 'coral', 'orangered', 'darkorange'];
 
 for (let i = 0; i < 100; i++) {
   particles.push(
@@ -326,7 +327,7 @@ function createParticles({ object, color, fades }) {
         y: (Math.random() - 0.5) * 2
       },
       radius: Math.random() * 3,
-      color: color || '#BAA0DE',
+      color: colors[Math.floor(Math.random() * colors.length)],
       fades
     })
     )
@@ -373,6 +374,8 @@ function animate() {
         gameOverText.style.display = "block";
       }, 2000)
       console.log('GAME OVER')
+      const explodeSound = new Audio('./components/audio/explode.wav')
+      explodeSound.play();
       setTimeout(() => {
         invaderProjectiles.splice(index, 1)
         player.opacity = 0
@@ -430,6 +433,9 @@ function animate() {
 
             // remover invaders e projéteis
             if (invaderFound && projectileFound) {
+              score += 10
+              console.log(score)
+              scoreEl.innerHTML = score
               createParticles({
                 object: invader,
                 fades: true
@@ -484,6 +490,7 @@ animate()
 const shootSound = new Audio('./components/audio/shoot.wav')
 
 document.addEventListener('keydown', (event) => {
+  if (!game.active) return
   if (event.key === ' ' || event.key === 'Spacebar') {
     shootSound.play();
     shootSound.playbackRate = 2.0
