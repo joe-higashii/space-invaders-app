@@ -3,6 +3,8 @@ backgroundMusic.id = 'backgroundMusic';
 backgroundMusic.loop = true;
 backgroundMusic.src = './components/audio/backgroundMusic.wav';
 
+backgroundMusic.autoplay();
+
 document.body.appendChild(backgroundMusic);
 
 backgroundMusic.volume = 0.5;
