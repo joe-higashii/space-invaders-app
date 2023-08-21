@@ -9,4 +9,4 @@
 ### 🔷 Para jogar novamente pressione f5
 
 ### Print da página de interação do projeto:
-![spaceinvaders preview](https://github.com/joe-higashii/pacman-repo/assets/129689531/9e3cd23f-4d9d-4239-9fdb-9b135d5a67fd)
+![spaceinvaders preview](https://github.com/joe-higashii/space-invaders-app/assets/129689531/9f6b0653-9b84-40ce-9c82-40853fe4dfae)
