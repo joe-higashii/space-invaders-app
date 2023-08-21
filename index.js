@@ -1,14 +1,21 @@
 const backgroundMusic = document.createElement('audio');
 backgroundMusic.id = 'backgroundMusic';
-backgroundMusic.loop = true
-
+backgroundMusic.loop = true;
 backgroundMusic.src = './components/audio/backgroundMusic.wav';
 
 document.body.appendChild(backgroundMusic);
 
 backgroundMusic.volume = 0.5;
 
-backgroundMusic.play();
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+
+    backgroundMusic.pause();
+  } else {
+
+    backgroundMusic.play();
+  }
+});
 
 const scoreEl = document.querySelector('#scoreEl')
 const canvas = document.querySelector('canvas')
@@ -335,7 +342,7 @@ function createParticles({ object, color, fades }) {
 }
 
 function animate() {
-  if (!game.active) return
+  if (!game.active ) return
   requestAnimationFrame(animate)
   c.fillStyle = 'black'
   c.fillRect(0, 0, canvas.width, canvas.height)
@@ -384,6 +391,8 @@ function animate() {
 
       setTimeout(() => {
         game.active = false
+        const gameOverSound = new Audio('./components/audio/gameOver.mp3')
+      gameOverSound.play();
       }, 2000)
 
       createParticles({
@@ -492,6 +501,7 @@ const shootSound = new Audio('./components/audio/shoot.wav')
 document.addEventListener('keydown', (event) => {
   if (!game.active) return
   if (event.key === ' ' || event.key === 'Spacebar') {
+    backgroundMusic.play();
     shootSound.play();
     shootSound.playbackRate = 2.0
   }
